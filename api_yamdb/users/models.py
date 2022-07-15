@@ -64,3 +64,7 @@ class CustomUser(AbstractUser):
 
     def is_admin(self):
         return self.role == self.ADMIN
+
+    class Meta():
+        verbose_name = 'Пользователь'
+        verbose_name_plural = 'Пользователи'
