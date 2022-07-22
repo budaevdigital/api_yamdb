@@ -32,7 +32,7 @@ class CustomUser(AbstractUser):
         help_text='Данный псевдоним будет виден другим пользователям',
         verbose_name='Ваш псевдоним')
     email = models.EmailField(
-        max_length=150, unique=True,
+        max_length=150,
         help_text='Введите ваш email',
         verbose_name='Email')
     first_name = models.CharField(
@@ -52,6 +52,9 @@ class CustomUser(AbstractUser):
         max_length=15,
         choices=ROLES,
         default=USER)
+    
+    # в нашей модели, привязка будет по этому полю
+    USERNAME_FIELD = 'username'
 
     def __str__(self):
         return self.username
@@ -68,3 +71,10 @@ class CustomUser(AbstractUser):
     class Meta():
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
+        # проверка на уникальность полей
+        constraints = [
+            models.UniqueConstraint(
+                fields=['username', 'email'],
+                name='unique_username_email'
+            )
+        ] 
