@@ -28,11 +28,11 @@ class CustomUser(AbstractUser):
     )
 
     username = models.CharField(
-        max_length=50, unique=True,
+        max_length=50,
         help_text='Данный псевдоним будет виден другим пользователям',
         verbose_name='Ваш псевдоним')
     email = models.EmailField(
-        max_length=150,
+        max_length=150, unique=True,
         help_text='Введите ваш email',
         verbose_name='Email')
     first_name = models.CharField(
@@ -40,7 +40,7 @@ class CustomUser(AbstractUser):
         help_text='Введите ваше имя',
         verbose_name='Имя')
     last_name = models.CharField(
-        max_length=50,
+        max_length=50, blank=True,
         help_text='Введите фамилию',
         verbose_name='Фамилия')
     bio = models.TextField(
@@ -52,9 +52,18 @@ class CustomUser(AbstractUser):
         max_length=15,
         choices=ROLES,
         default=USER)
-    
-    # в нашей модели, привязка будет по этому полю
-    USERNAME_FIELD = 'username'
+
+    # в нашей модели, привязка будет по полю email
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username', ]
+
+    def email_user(self, subject, message, from_email=None, **kwargs):
+        '''
+        Sends an email to this User.
+        '''
+        pass
+        # TODO - дописать функцию
+        # send_mail(subject, message, from_email, [self.email], **kwargs)
 
     def __str__(self):
         return self.username
@@ -77,4 +86,4 @@ class CustomUser(AbstractUser):
                 fields=['username', 'email'],
                 name='unique_username_email'
             )
-        ] 
+        ]
