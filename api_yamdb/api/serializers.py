@@ -1,7 +1,7 @@
+import re
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from users.models import CustomUser, VerifyCode
-import re
 
 
 class NotAdminSerializer(serializers.ModelSerializer):
