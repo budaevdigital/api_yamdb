@@ -7,10 +7,9 @@ import re
 class NotAdminSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ('__all__')
-        # fields = ('username', 'email',
-        #           'first_name', 'last_name',
-        #           'bio', 'role')
+        fields = ('username', 'email',
+                  'first_name', 'last_name',
+                  'bio', 'role')
         read_only_fields = ('role',)
 
 
