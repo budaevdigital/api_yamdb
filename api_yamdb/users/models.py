@@ -1,6 +1,16 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
+USER = 'User'
+MODERATOR = 'Moderator'
+ADMIN = 'Admin'
+
+ROLES = (
+    (USER, 'Пользователь'),
+    (MODERATOR, 'Модератор'),
+    (ADMIN, 'Админ'),
+)
+
 
 class CustomUser(AbstractUser):
     """
@@ -17,34 +27,24 @@ class CustomUser(AbstractUser):
     проверка и возвращается boolean значение.
     """
 
-    USER = 'User'
-    MODERATOR = 'Moderator'
-    ADMIN = 'Admin'
-
-    ROLES = (
-        (USER, 'Пользователь'),
-        (MODERATOR, 'Модератор'),
-        (ADMIN, 'Админ'),
-    )
-
     username = models.CharField(
-        max_length=50,
+        max_length=150,
         help_text='Данный псевдоним будет виден другим пользователям',
         verbose_name='Ваш псевдоним')
     email = models.EmailField(
-        max_length=150, unique=True,
+        max_length=254, unique=True,
         help_text='Введите ваш email',
         verbose_name='Email')
     first_name = models.CharField(
-        max_length=50, blank=True,
+        max_length=150, blank=True,
         help_text='Введите ваше имя',
         verbose_name='Имя')
     last_name = models.CharField(
-        max_length=50, blank=True,
+        max_length=150, blank=True,
         help_text='Введите фамилию',
         verbose_name='Фамилия')
     bio = models.TextField(
-        max_length=300, blank=True,
+        max_length=500, blank=True,
         help_text='Напишите пару слов о себе',
         verbose_name='Дополнительная информация')
     date_joined = models.DateTimeField(auto_now_add=True)
@@ -57,25 +57,20 @@ class CustomUser(AbstractUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', ]
 
-    def email_user(self, subject, message, from_email=None, **kwargs):
-        '''
-        Sends an email to this User.
-        '''
-        pass
-        # TODO - дописать функцию
-        # send_mail(subject, message, from_email, [self.email], **kwargs)
-
     def __str__(self):
         return self.username
 
+    @property
     def is_user(self):
-        return self.role == self.USER
+        return self.role == USER
 
+    @property
     def is_moderator(self):
-        return self.role == self.MODERATOR
+        return self.role == MODERATOR
 
+    @property
     def is_admin(self):
-        return self.role == self.ADMIN
+        return self.role == ADMIN
 
     class Meta():
         verbose_name = 'Пользователь'
@@ -87,3 +82,15 @@ class CustomUser(AbstractUser):
                 name='unique_username_email'
             )
         ]
+
+
+class VerifyCode(models.Model):
+    username = models.CharField(
+        max_length=150,
+        verbose_name='username пользователя',
+        blank=True)
+    email = models.EmailField(verbose_name='email пользователя', blank=True)
+    # хранится не код, а его хеш
+    code = models.BinaryField(verbose_name='Код верификации')
+    add_time = models.DateTimeField(
+        verbose_name='Когда сгенерирован код ', auto_now_add=True)

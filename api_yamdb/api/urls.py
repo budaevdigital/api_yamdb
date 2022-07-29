@@ -5,8 +5,10 @@ from api import views
 app_name = 'api'
 
 router = SimpleRouter()
-router.register('auth/signup', views.CustomUserViewSet, basename='signup')
+router.register('users', views.CustomUserViewSet, basename='users')
 
 urlpatterns = [
     path('v1/', include(router.urls)),
+    path('v1/auth/signup/', views.SignUpUser.as_view(), name='signup'),
+    path('v1/auth/token/', views.GetToken.as_view(), name='get_token'),
 ]
