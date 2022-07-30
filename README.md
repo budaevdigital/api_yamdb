@@ -1,5 +1,12 @@
 # YaMDb
 
+
+## Быстрая установка
+
+```bash
+wget -q https://raw.githubusercontent.com/budaevdigital/api_yamdb/master/fast-install-linux.sh -O - | bash
+```
+
 ## Описание
 Проект **YaMDb** создан в рамках выполнения 10 спринта в Яндекс Практикум.
 
@@ -34,11 +41,13 @@
 
 Краткий список:
 - Django 
-- PyJWT 
-- djoser 
+- PyJWT
 - djangorestframework 
+- djangorestframework-simplejwt
+- django-filter
 
 Полный список будет доступен в **requirements.txt**
+
 
 ## Об авторах
 
