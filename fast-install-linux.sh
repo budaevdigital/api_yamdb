@@ -7,7 +7,9 @@ echo $CURRENT_DIR
 
 function install_and_start() {
     cd $DOT_DIR_FILE_HOME/
-    python -m venv venv && source ./venv/bin/activate 
+    python -m venv venv
+    source ./venv/bin/activate
+    echo "Активация виртуального окружения venv"
     python -m pip install --upgrade pip 
     python -m pip install -r requirements.txt 
     cd $NAME_PROJECT/
