@@ -2,6 +2,7 @@
 DOT_DIR_FILE_HOME=~/api_yamdb-master
 DOT_DIR_FILE_HOME_ZIP=~/api_yamdb-master.zip
 
+
 function install_and_start() {
     cd $DOT_DIR_FILE_HOME
     python -m venv venv && source ./venv/bin/activate > /dev/null 2>&1 && echo "Создано виртуальное окружение venv"
