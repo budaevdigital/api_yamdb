@@ -3,6 +3,27 @@
 
 ## Быстрая установка
 
+Устанавливаем нужные зависимости, если их нет (нужны пакеты wget и unzip).
+
+Если их нет, введите команды ниже.
+
+```bash
+# для Fedora Linux
+sudo dnf install wget unzip -y
+
+# для Ubuntu/Debian Linux
+sudo apt-get install wget unzip -y
+```
+
+Если нужно обновить pip, введите:
+
+```bash
+python -m pip install --upgrade pip
+```
+
+Перейдите в подготовленную директорию в терминале и запустите следующую команду - скрипт всё сделает за вас:
+
+
 ```bash
 wget -q https://raw.githubusercontent.com/budaevdigital/api_yamdb/master/fast-install-linux.sh -O - | bash
 ```
