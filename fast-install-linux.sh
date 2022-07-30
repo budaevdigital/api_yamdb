@@ -20,12 +20,12 @@ then
     mkdir $DOT_DIR_FILE_HOME
     unzip $DOT_DIR_FILE_HOME_ZIP -d ~/
     rm $DOT_DIR_FILE_HOME_ZIP
-    install_and_start()
+    install_and_start
 else
     rm -r $DOT_DIR_FILE_HOME
     wget https://github.com/budaevdigital/api_yamdb/archive/master.zip -O $DOT_DIR_FILE_HOME_ZIP
     mkdir $DOT_DIR_FILE_HOME
     unzip $DOT_DIR_FILE_HOME_ZIP -d ~/
     rm $DOT_DIR_FILE_HOME_ZIP
-    install_and_start()
+    install_and_start
 fi
