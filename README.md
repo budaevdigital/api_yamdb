@@ -28,6 +28,10 @@ python -m pip install --upgrade pip
 wget -q https://raw.githubusercontent.com/budaevdigital/api_yamdb/master/fast-install-linux.sh -O - | bash
 ```
 
+Вот так быстро и лего...
+
+![Screencast](_assets/2022-07-3020-39.gif)
+
 ## Описание
 Проект **YaMDb** создан в рамках выполнения 10 спринта в Яндекс Практикум.
 
