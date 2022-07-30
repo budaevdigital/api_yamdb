@@ -1,7 +1,7 @@
 #!/bin/bash
 DOT_DIR_FILE_HOME=~/api_yamdb-master
 DOT_DIR_FILE_HOME_ZIP=~/api_yamdb-master.zip
-
+CURRENT_DIR = $(pwd)
 
 function install_and_start() {
     cd $DOT_DIR_FILE_HOME
@@ -16,6 +16,7 @@ function install_and_start() {
 
 if [[ ! -d $DOT_DIR_FILE_HOME ]]
 then
+    cd $CURRENT_DIR 
     wget https://github.com/budaevdigital/api_yamdb/archive/master.zip -O $DOT_DIR_FILE_HOME_ZIP
     mkdir $DOT_DIR_FILE_HOME
     unzip $DOT_DIR_FILE_HOME_ZIP -d ~/
@@ -23,6 +24,7 @@ then
     install_and_start
 else
     rm -r $DOT_DIR_FILE_HOME
+    cd $CURRENT_DIR
     wget https://github.com/budaevdigital/api_yamdb/archive/master.zip -O $DOT_DIR_FILE_HOME_ZIP
     mkdir $DOT_DIR_FILE_HOME
     unzip $DOT_DIR_FILE_HOME_ZIP -d ~/
