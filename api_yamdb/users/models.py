@@ -1,7 +1,5 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-<<<<<<< HEAD
-=======
 
 USER = 'User'
 MODERATOR = 'Moderator'
@@ -96,4 +94,3 @@ class VerifyCode(models.Model):
     code = models.BinaryField(verbose_name='Код верификации')
     add_time = models.DateTimeField(
         verbose_name='Когда сгенерирован код ', auto_now_add=True)
->>>>>>> users

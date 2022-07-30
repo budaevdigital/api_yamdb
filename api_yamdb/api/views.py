@@ -1,4 +1,5 @@
 from django.core.mail import EmailMessage
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import permissions, viewsets, status
 from rest_framework import mixins, viewsets, filters
 from rest_framework.viewsets import GenericViewSet
@@ -6,13 +7,21 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
-from .permissions import AdminStaffOnly, AdminOrReadOnly
-from .serializers import (SignUpUserSerializer,
-                          GetTokenSerializer,
-                          CustomUserSerializer,
-                          NotAdminSerializer)
+from .filters import TitleFilter
+from .permissions import (AdminStaffOnly, AdminOrReadOnly,
+                          AuthorModeratorAdminOrSafeMethodOnly)
+from .serializers import (SignUpUserSerializer, GetTokenSerializer,
+                          CustomUserSerializer, NotAdminSerializer,
+                          CategorySerializer, GenreSerializer,
+                          TitleReadSerializer, TitleWriteSerializer,
+                          ReviewSerializer, CommentSerializer)
 from users.models import CustomUser, VerifyCode
+from reviews.models import Category, Genre, Title, Review
 from users import encoding
+
+# для расчёта среднего в моделях
+from django.db.models import Avg
+from django.shortcuts import get_object_or_404
 
 
 class ModelMixinSet(mixins.ListModelMixin, mixins.CreateModelMixin,
@@ -141,3 +150,78 @@ class GetToken(APIView):
         return Response(
             {'confirmation_code': 'Неверный код подтверждения!'},
             status=status.HTTP_400_BAD_REQUEST)
+
+
+class CategoryViewSet(ModelMixinSet):
+    """
+    Получить список всех категорий. Права доступа: Доступно без токена
+    """
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+    permission_classes = (AdminOrReadOnly,)
+    filter_backends = (filters.SearchFilter, )
+    search_fields = ('name', )
+    lookup_field = 'slug'
+
+
+class GenreViewSet(ModelMixinSet):
+    """
+    Получить список всех жанров. Права доступа: Доступно без токена
+    """
+    queryset = Genre.objects.all()
+    serializer_class = GenreSerializer
+    permission_classes = (AdminOrReadOnly,)
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('name', )
+    lookup_field = 'slug'
+
+
+class TitleViewSet(viewsets.ModelViewSet):
+    """
+    Получить список всех объектов. Права доступа: Доступно без токена
+    """
+    queryset = Title.objects.annotate(
+        rating=Avg('reviews__score')
+    ).all()
+    permission_classes = (AdminOrReadOnly,)
+    filter_backends = (DjangoFilterBackend, )
+    filterset_class = TitleFilter
+
+    def get_serializer_class(self):
+        if self.action in ('list', 'retrieve'):
+            return TitleReadSerializer
+        return TitleWriteSerializer
+
+
+class CommentViewSet(viewsets.ModelViewSet):
+    serializer_class = CommentSerializer
+    permission_classes = (AuthorModeratorAdminOrSafeMethodOnly,)
+
+    def get_queryset(self):
+        review = get_object_or_404(
+            Review,
+            id=self.kwargs.get('review_id'))
+        return review.comments.all()
+
+    def perform_create(self, serializer):
+        review = get_object_or_404(
+            Review,
+            id=self.kwargs.get('review_id'))
+        serializer.save(author=self.request.user, review=review)
+
+
+class ReviewViewSet(viewsets.ModelViewSet):
+    serializer_class = ReviewSerializer
+    permission_classes = (AuthorModeratorAdminOrSafeMethodOnly,)
+
+    def get_queryset(self):
+        title = get_object_or_404(
+            Title,
+            id=self.kwargs.get('title_id'))
+        return title.reviews.all()
+
+    def perform_create(self, serializer):
+        title = get_object_or_404(
+            Title,
+            id=self.kwargs.get('title_id'))
+        serializer.save(author=self.request.user, title=title)
